@@ -1,0 +1,2 @@
+experiment,model,dataset,num_samples,correct,accuracy,total_parameters,trainable_parameters,evaluation_seconds
+zero_shot,Qwen/Qwen3-0.6B-Base,GSM8K,1319,648,0.49128127369219105,596049920,0,1337.8459005355835

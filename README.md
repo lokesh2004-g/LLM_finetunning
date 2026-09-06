@@ -70,6 +70,9 @@ The experimental structure is:
                     +-----------+-----------+
                     |           |           |
                    DPO         GRPO        RLOO
+
+```
+
 ## Baseline Evaluation — Zero-Shot
 
 Before applying any fine-tuning method, we evaluate the original **Qwen3-0.6B-Base** model on the complete GSM8K test set. No model parameters are updated during this experiment.

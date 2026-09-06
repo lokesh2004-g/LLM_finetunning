@@ -1,6 +1,4 @@
-from pathlib import Path
-
-readme = r"""# Small LLM Fine-Tuning and Post-Training Benchmark
+#LLM FINNTUNNING REPO
 
 A systematic benchmark of supervised fine-tuning, parameter-efficient fine-tuning, preference optimization, and reinforcement-learning methods for small language models under limited GPU resources.
 

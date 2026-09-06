@@ -70,3 +70,24 @@ The experimental structure is:
                     +-----------+-----------+
                     |           |           |
                    DPO         GRPO        RLOO
+## Baseline Evaluation — Zero-Shot
+
+Before applying any fine-tuning method, we evaluate the original **Qwen3-0.6B-Base** model on the complete GSM8K test set. No model parameters are updated during this experiment.
+
+### Evaluation Setup
+
+| Setting | Value |
+|---|---|
+| Model | `Qwen/Qwen3-0.6B-Base` |
+| Dataset | GSM8K |
+| Test Samples | 1,319 |
+| Evaluation | Zero-shot |
+| Batch Size | 32 |
+| Max New Tokens | 512 |
+| Total Parameters | 596,049,920 |
+| Trainable Parameters | 0 |
+
+Each problem is solved using step-by-step generation, with the model instructed to return its final result as:
+
+```text
+Final Answer: <number>

@@ -92,5 +92,5 @@ Before applying any fine-tuning method, we evaluate the original **Qwen3-0.6B-Ba
 
 Each problem is solved using step-by-step generation, with the model instructed to return its final result as:
 
-```text
+
 Final Answer: <number>

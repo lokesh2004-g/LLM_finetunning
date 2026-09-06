@@ -4,15 +4,15 @@ A systematic benchmark of supervised fine-tuning, parameter-efficient fine-tunin
 
 ## Results at a Glance
 
-| # | Method | GSM8K Accuracy ↑ | Valid Format ↑ | Trainable Parameters | Peak VRAM ↓ | Training / Evaluation Time ↓ |
+| # | Method | GSM8K Accuracy ↑ | Valid Format ↑ | Trainable Parameters| Training / Evaluation Time ↓ |
 |---|---|---:|---:|---:|---:|---:|
 | 1 | **Zero-shot Base Model** | **49.13%** | **83.09%** | 0 | — | 22.30 min |
-| 2 | Full SFT | — | — | — | — | — |
-| 3 | LoRA-SFT | — | — | — | — | — |
-| 4 | QLoRA-SFT | — | — | — | — | — |
-| 5 | DPO + LoRA | — | — | — | — | — |
-| 6 | GRPO + LoRA | — | — | — | — | — |
-| 7 | RLOO + LoRA | — | — | — | — | — |
+| 2 | Full SFT | — | — | — | — |
+| 3 | LoRA-SFT | — | — | — | — |
+| 4 | QLoRA-SFT | — | — | — | — |
+| 5 | DPO + LoRA | — | — | — | — |
+| 6 | GRPO + LoRA | — | — | — | — |
+| 7 | RLOO + LoRA | — | — | — | — |
 
 > The table will be updated as each experiment is completed. All methods are evaluated using the same core reasoning benchmark so that improvements can be compared directly.
 

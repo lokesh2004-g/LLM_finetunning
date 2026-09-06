@@ -1,12 +1,12 @@
-## LLM FINNTUNNING REPO
+# Small LLM Fine-Tuning and Post-Training Benchmark
 
-A systematic benchmark of supervised fine-tuning, parameter-efficient fine-tuning, preference optimization, and reinforcement-learning methods for small language models under limited GPU resources.
+A systematic benchmark of supervised fine-tuning, parameter-efficient fine-tuning, preference optimization, and reinforcement-learning methods for small language models under limited compute resources.
 
 ## Results at a Glance
 
-| # | Method | GSM8K Accuracy ↑ | Valid Format ↑ | Trainable Parameters| Training / Evaluation Time ↓ |
-|---|---|---:|---:|---:|---:|---:|
-| 1 | **Zero-shot Base Model** | **49.13%** | **83.09%** | 0 | — | 22.30 min |
+| # | Method | GSM8K Accuracy ↑ | Valid Format ↑ | Trainable Parameters ↓ | Training / Evaluation Time ↓ |
+|---|---|---:|---:|---:|---:|
+| 1 | **Zero-shot Base Model** | **49.13%** | **83.09%** | 0 | 22.30 min |
 | 2 | Full SFT | — | — | — | — |
 | 3 | LoRA-SFT | — | — | — | — |
 | 4 | QLoRA-SFT | — | — | — | — |
@@ -14,31 +14,37 @@ A systematic benchmark of supervised fine-tuning, parameter-efficient fine-tunin
 | 6 | GRPO + LoRA | — | — | — | — |
 | 7 | RLOO + LoRA | — | — | — | — |
 
-> The table will be updated as each experiment is completed. All methods are evaluated using the same core reasoning benchmark so that improvements can be compared directly.
+> The table will be updated as each experiment is completed. All methods are evaluated using the same reasoning benchmark so that their performance and training efficiency can be compared directly.
 
 ---
 
 ## 1. Introduction
 
-Large Language Models can be adapted to downstream tasks using several different post-training strategies. Full supervised fine-tuning updates all model parameters, while parameter-efficient methods such as LoRA and QLoRA train only a small fraction of the model. Preference-based methods such as DPO optimize the model using preferred and rejected responses, while online reinforcement-learning methods such as GRPO and RLOO optimize the model from rewards obtained from newly generated responses during training.
+Large Language Models can be adapted to downstream tasks using several different post-training strategies.
 
-The objective of this project is to build a **controlled benchmark of these methods on a small language model that can be trained and evaluated on Kaggle GPUs**.
+Full supervised fine-tuning updates all model parameters, while parameter-efficient methods such as LoRA and QLoRA update only a small fraction of the model parameters.
+
+Preference-based methods such as DPO optimize the model using preferred and rejected responses, while online reinforcement-learning methods such as GRPO and RLOO optimize the model using rewards obtained from responses generated during training.
+
+The objective of this project is to build a **controlled benchmark of these methods on a small language model that can be trained and evaluated on Kaggle**.
 
 The project focuses on the following question:
 
-> **Which fine-tuning or post-training method provides the best reasoning performance while remaining efficient in terms of trainable parameters, GPU memory, training time, and model storage?**
+> **Which fine-tuning or post-training method provides the best reasoning performance while remaining efficient in terms of trainable parameters and training time?**
 
 The initial benchmark uses:
 
 - **Base model:** `Qwen/Qwen3-0.6B-Base`
 - **Primary dataset:** GSM8K
 - **Primary metric:** Exact Match Accuracy
-- **Environment:** Kaggle GPU
+- **Environment:** Kaggle
 - **Task:** Mathematical reasoning with automatically verifiable final answers
 
 Using one model and one dataset initially makes the comparison easier to interpret. The main variable changed between experiments is the training or post-training strategy.
 
-### Initial Experiment Plan
+---
+
+## 2. Initial Experiment Plan
 
 The first version of the benchmark contains seven experiments:
 

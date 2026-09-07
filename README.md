@@ -7,7 +7,7 @@ A systematic benchmark of parameter-efficient supervised fine-tuning, preference
 | # | Method                   | GSM8K Accuracy ↑ | Valid Format ↑ | Trainable Parameters ↓ | Training / Evaluation Time ↓ |
 | - | ------------------------ | ---------------: | -------------: | ---------------------: | ---------------------------: |
 | 1 | **Zero-shot Base Model** |       **49.13%** |     **83.09%** |                      0 |                    22.30 min |
-| 2 | **LoRA-SFT**             |       **50.72%** |     **98.56%** |     **10.09M (~1.7%)** |                            — |
+| 2 | **LoRA-SFT**             |       **50.72%** |     **98.56%** |     **10.09M (~1.7%)** |                     3hours 15 min |
 | 3 | QLoRA-SFT                |                — |              — |                      — |                            — |
 | 4 | DPO + LoRA               |                — |              — |                      — |                            — |
 | 5 | GRPO + LoRA              |                — |              — |                      — |                            — |

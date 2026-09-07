@@ -1,4 +1,4 @@
-# Small LLM Fine-Tuning and Post-Training Benchmark
+# Qwen3-0.6B-Base Fine-Tuning and Post-Training Benchmark
 
 A systematic benchmark of parameter-efficient supervised fine-tuning, preference optimization, and reinforcement-learning methods for small language models under limited compute resources.
 

@@ -7,7 +7,7 @@ A systematic benchmark of parameter-efficient supervised fine-tuning, preference
 | # | Method                   | GSM8K Accuracy ↑ | Valid Format ↑ | Trainable Parameters ↓ | Training / Evaluation Time ↓ |
 | - | ------------------------ | ---------------: | -------------: | ---------------------: | ---------------------------: |
 | 1 | **Zero-shot Base Model** |       **49.13%** |     **83.09%** |                      0 |                    22.30 min |
-| 2 | **LoRA-SFT**             |       **50.72%** |     **98.56%** |     **10.09M (~1.7%)** |                     3hours 15 min |
+| 2 | **LoRA-SFT (r=8)**       |       **52.84%** |     **97.57%** | **5,046,272 (~0.84%)** |           **61.46 min eval** |
 | 3 | QLoRA-SFT                |                — |              — |                      — |                            — |
 | 4 | DPO + LoRA               |                — |              — |                      — |                            — |
 | 5 | GRPO + LoRA              |                — |              — |                      — |                            — |
@@ -112,31 +112,25 @@ This result is used as the common baseline for measuring the improvement obtaine
 
 ## 4. LoRA Supervised Fine-Tuning
 
-The second experiment applies **Low-Rank Adaptation (LoRA)** to `Qwen/Qwen3-0.6B-Base` using the GSM8K training set.
+The second experiment fine-tunes `Qwen/Qwen3-0.6B-Base` on GSM8K using **LoRA with rank 8**.
 
-Instead of updating all parameters of the model, LoRA keeps the original model weights frozen and introduces small trainable low-rank matrices into selected transformer layers.
+The original model weights remain frozen and only the low-rank adapter parameters are trained.
 
-This reduces the number of trainable parameters while allowing the model to adapt to mathematical reasoning examples.
+### Setup
 
-### Training Setup
+| Setting               | Value                  |
+| --------------------- | ---------------------- |
+| Base Model            | `Qwen/Qwen3-0.6B-Base` |
+| Dataset               | GSM8K                  |
+| Method                | LoRA-SFT               |
+| LoRA Rank (`r`)       | **8**                  |
+| Trainable Parameters  | **5,046,272**          |
+| Total Parameters      | **601,096,192**        |
+| Trainable Percentage  | **0.8395% (~0.84%)**   |
+| Test Samples          | 1,319                  |
+| Evaluation Batch Size | 32                     |
 
-| Setting                     | Value                  |
-| --------------------------- | ---------------------- |
-| Base Model                  | `Qwen/Qwen3-0.6B-Base` |
-| Dataset                     | GSM8K                  |
-| Fine-Tuning Method          | LoRA-SFT               |
-| LoRA Rank (`r`)             | 16                     |
-| LoRA Alpha                  | 32                     |
-| LoRA Dropout                | 0.05                   |
-| Learning Rate               | `2e-4`                 |
-| Epochs                      | 3                      |
-| Per-Device Batch Size       | 4                      |
-| Gradient Accumulation Steps | 8                      |
-| Effective Batch Size        | 32                     |
-| Trainable Parameters        | ~10.09M                |
-| Percentage of Model Trained | ~1.7%                  |
-
-LoRA adapters are applied to both the attention and MLP projection layers:
+LoRA adapters are applied to:
 
 ```text
 q_proj
@@ -148,54 +142,51 @@ up_proj
 down_proj
 ```
 
-During supervised fine-tuning, the model receives the GSM8K question as input and the corresponding step-by-step solution as the training target.
-
-Loss is calculated only on the generated solution tokens. Prompt tokens are masked from the loss so that optimization focuses on learning the reasoning response.
-
-The expected response format remains:
-
-```text
-Final Answer: <number>
-```
+During SFT, GSM8K questions are used as prompts and their step-by-step solutions are used as targets. Prompt tokens are masked from the loss so that optimization focuses on the generated solution tokens.
 
 ### LoRA-SFT Results
 
-| Metric                     | Zero-Shot |    LoRA-SFT |         Change |
-| -------------------------- | --------: | ----------: | -------------: |
-| GSM8K Exact Match Accuracy |    49.13% |  **50.72%** |   **+1.59 pp** |
-| Valid Final Answer Format  |    83.09% |  **98.56%** |  **+15.47 pp** |
-| Trainable Parameters       |         0 | **~10.09M** | ~1.7% of model |
+| Metric                  |   Zero-Shot |  LoRA-SFT (r=8) |        Change |
+| ----------------------- | ----------: | --------------: | ------------: |
+| GSM8K Accuracy          |      49.13% |      **52.84%** |  **+3.71 pp** |
+| Valid Format            |      83.09% |      **97.57%** | **+14.48 pp** |
+| Correct Answers         | 648 / 1,319 | **697 / 1,319** |       **+49** |
+| Trainable Parameters    |           0 |   **5,046,272** |        ~0.84% |
+| Evaluation Time         |   22.30 min |   **61.46 min** |             — |
+| Average Time / Question |           — |     **2.796 s** |             — |
 
-LoRA-SFT improves GSM8K exact-match accuracy from:
+The rank-8 LoRA model improves GSM8K accuracy from:
 
 ```text
-49.13% → 50.72%
+49.13% → 52.84%
 ```
 
 corresponding to an absolute improvement of:
 
 ```text
-+1.59 percentage points
++3.71 percentage points
 ```
 
-The improvement in valid answer formatting is substantially larger:
+while training only about:
 
 ```text
-83.09% → 98.56%
+0.84% of the model parameters
 ```
 
-This shows that supervised fine-tuning strongly improves the model's ability to follow the required response format.
-
-However, the improvement in exact mathematical accuracy is relatively small. The result suggests that LoRA-SFT adapts the model strongly to the GSM8K response structure while producing a more limited improvement in mathematical reasoning performance.
-
-This LoRA-SFT checkpoint is used as the common starting point for the subsequent DPO, GRPO, and RLOO experiments.
+The valid output-format rate also improves substantially:
 
 ```text
-                  LoRA-SFT
-                     |
-          +----------+----------+
-          |          |          |
-         DPO        GRPO       RLOO
+83.09% → 97.57%
+```
+
+The resulting LoRA-SFT checkpoint is used as the common starting point for DPO, GRPO, and RLOO experiments.
+
+```text
+                 LoRA-SFT (r=8)
+                       |
+             +---------+---------+
+             |         |         |
+            DPO       GRPO      RLOO
 ```
 
 ---
